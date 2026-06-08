@@ -157,9 +157,9 @@ export default function MinXView() {
       <section className="auth-stage" aria-label="OCP Horizon authentication">
         <header className="auth-header">
           <div className="auth-brand">
-            <div className="auth-logo">OCP</div>
+            <img className="auth-logo-img" src="/logo/LOGO.png" alt="MINE X" />
             <div>
-              <div className="auth-brand-title">Horizon View</div>
+              <div className="auth-brand-title">MINE X</div>
               <a href="mailto:horizon@ocpgroup.ma">horizon@ocpgroup.ma</a>
             </div>
           </div>

@@ -1,6 +1,6 @@
-# MIN X
+# MINE X
 
-This is a standalone Next.js version of the MIN X dashboard.
+This is a standalone Next.js version of the MINE X dashboard.
 
 The dashboard source now lives in the Next.js app files:
 
