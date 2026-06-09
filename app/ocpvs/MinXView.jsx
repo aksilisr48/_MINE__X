@@ -115,6 +115,172 @@ const DEFAULT_PAGE_LABELS = {
   'task-checklist': 'Taches et checklist',
 };
 
+const NEWS_PAGE_MARKUP = `
+<div class="page" id="page-news">
+  <div class="news-shell">
+    <header class="news-masthead">
+      <div>
+        <div class="news-kicker"><span></span> Business intelligence, curated daily</div>
+        <h1>Latest News</h1>
+        <p>Essential updates on the economy, technology, digital transformation, and the ideas shaping modern business.</p>
+      </div>
+      <div class="news-edition">
+        <span>Morning edition</span>
+        <strong>09 JUN 2026</strong>
+      </div>
+    </header>
+
+    <section class="news-lead-layout" aria-label="Featured news">
+      <article class="news-feature-card">
+        <div class="news-feature-visual news-art-ai">
+          <span class="news-badge news-badge-light">Technology</span>
+          <div class="news-visual-stamp">01</div>
+        </div>
+        <div class="news-feature-content">
+          <div class="news-date">June 9, 2026 <span></span> 7 min read</div>
+          <h2>AI is reshaping business decision-making</h2>
+          <p>From forecasting demand to managing complex operations, artificial intelligence is moving from experimental pilots into the center of executive strategy.</p>
+          <a class="news-read-link" href="#news-ai">Read full story <span aria-hidden="true">+</span></a>
+        </div>
+      </article>
+
+      <div class="news-side-stories">
+        <div class="news-section-label">
+          <span>Top stories</span>
+          <span class="news-section-line"></span>
+        </div>
+        <article class="news-side-card">
+          <div class="news-side-visual news-art-market"></div>
+          <div class="news-side-copy">
+            <span class="news-badge">Economy</span>
+            <h3>Global markets react to new economic trends</h3>
+            <div class="news-date">June 8, 2026 <span></span> 5 min</div>
+          </div>
+        </article>
+        <article class="news-side-card">
+          <div class="news-side-visual news-art-startup"></div>
+          <div class="news-side-copy">
+            <span class="news-badge news-badge-blue">Innovation</span>
+            <h3>Startups accelerate digital innovation</h3>
+            <div class="news-date">June 7, 2026 <span></span> 4 min</div>
+          </div>
+        </article>
+        <article class="news-side-card">
+          <div class="news-side-visual news-art-investment"></div>
+          <div class="news-side-copy">
+            <span class="news-badge news-badge-dark">Business</span>
+            <h3>Technology investment grows in emerging markets</h3>
+            <div class="news-date">June 6, 2026 <span></span> 6 min</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="news-content-layout">
+      <div class="news-latest">
+        <div class="news-heading-row">
+          <div>
+            <span class="news-eyebrow">Fresh perspective</span>
+            <h2>Latest stories</h2>
+          </div>
+          <a href="#all-news">View all news <span aria-hidden="true">+</span></a>
+        </div>
+        <div class="news-card-grid">
+          <article class="news-story-card">
+            <div class="news-story-visual news-art-productivity">
+              <span class="news-story-index">02</span>
+            </div>
+            <div class="news-story-body">
+              <span class="news-badge news-badge-blue">Tech</span>
+              <h3>New tools improve productivity in companies</h3>
+              <p>Connected workflows are helping teams reduce repetitive work and focus on decisions that create measurable value.</p>
+              <div class="news-story-footer">
+                <span>June 5, 2026</span>
+                <a href="#news-productivity" aria-label="Read productivity story">+</a>
+              </div>
+            </div>
+          </article>
+          <article class="news-story-card">
+            <div class="news-story-visual news-art-digital">
+              <span class="news-story-index">03</span>
+            </div>
+            <div class="news-story-body">
+              <span class="news-badge">Digital transformation</span>
+              <h3>Cloud platforms become essential business infrastructure</h3>
+              <p>Leaders are consolidating data, operations, and customer services on flexible digital foundations.</p>
+              <div class="news-story-footer">
+                <span>June 4, 2026</span>
+                <a href="#news-cloud" aria-label="Read cloud platforms story">+</a>
+              </div>
+            </div>
+          </article>
+          <article class="news-story-card">
+            <div class="news-story-visual news-art-green">
+              <span class="news-story-index">04</span>
+            </div>
+            <div class="news-story-body">
+              <span class="news-badge news-badge-dark">Business</span>
+              <h3>Green industry creates new growth opportunities</h3>
+              <p>Efficiency, cleaner energy, and circular production models are opening new paths for industrial investment.</p>
+              <div class="news-story-footer">
+                <span>June 3, 2026</span>
+                <a href="#news-green" aria-label="Read green industry story">+</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <aside class="news-trending">
+        <div class="news-trending-head">
+          <span class="news-eyebrow">Most read</span>
+          <h2>Trending News</h2>
+        </div>
+        <ol class="news-trending-list">
+          <li>
+            <span>01</span>
+            <div>
+              <small>Economy</small>
+              <h3>Why supply chains are becoming more regional</h3>
+              <p>3 min read</p>
+            </div>
+          </li>
+          <li>
+            <span>02</span>
+            <div>
+              <small>Innovation</small>
+              <h3>Research teams turn industrial data into practical tools</h3>
+              <p>5 min read</p>
+            </div>
+          </li>
+          <li>
+            <span>03</span>
+            <div>
+              <small>Technology</small>
+              <h3>Cybersecurity spending rises as operations connect</h3>
+              <p>4 min read</p>
+            </div>
+          </li>
+          <li>
+            <span>04</span>
+            <div>
+              <small>Business</small>
+              <h3>Executives put measurable value at the center of digital plans</h3>
+              <p>6 min read</p>
+            </div>
+          </li>
+        </ol>
+        <div class="news-brief-card">
+          <span>Weekly briefing</span>
+          <h3>Five signals shaping the next business cycle.</h3>
+          <a href="#news-brief">Explore the briefing <span aria-hidden="true">+</span></a>
+        </div>
+      </aside>
+    </section>
+  </div>
+</div>
+`;
+
 function getInitials(name) {
   return name
     .trim()
@@ -452,6 +618,12 @@ export default function MinXView() {
     email: '',
     role: ROLE_OPTIONS[0],
   });
+  const emptyNewsPagePattern = /<div class="page" id="page-news">\s*<\/div>/;
+  const appMarkup = emptyNewsPagePattern.test(markup)
+    ? markup.replace(emptyNewsPagePattern, NEWS_PAGE_MARKUP)
+    : markup.includes('id="page-news"')
+      ? markup
+      : markup.replace('<!-- FOOTER -->', `${NEWS_PAGE_MARKUP}\n\n<!-- FOOTER -->`);
 
   useEffect(() => {
     const savedUser = readSavedUser();
@@ -637,7 +809,7 @@ export default function MinXView() {
   }
 
   if (user) {
-    return <div ref={appRef} dangerouslySetInnerHTML={{ __html: markup }} />;
+    return <div ref={appRef} dangerouslySetInnerHTML={{ __html: appMarkup }} />;
   }
 
   return (
