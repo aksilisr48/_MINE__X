@@ -8,37 +8,37 @@ const STORAGE_KEY = 'demo-user';
 const ROLE_OPTIONS = ['Chef de projet', 'DG', 'Manager', 'Technicien'];
 
 const ROLE_ACCESS = {
-  'Chef de projet': ['dash', 'init', 'gantt', 'sim', 'risk'],
-  DG: ['dash', 'exec', 'pred', 'news', 'risk'],
-  Manager: ['dash', 'init', 'gantt', 'risk', 'ai', 'pred', 'news'],
-  Technicien: ['dash', 'gantt', 'risk', 'rca'],
+  'Chef de projet': ['news', 'dash', 'init', 'risk', 'gantt', 'sim', 'pred', 'exec', 'ai'],
+  DG: ['dash', 'init', 'exec', 'news', 'risk', 'ai'],
+  Manager: ['news', 'dash', 'init', 'risk', 'gantt', 'sim', 'exec', 'ai'],
+  Technicien: ['news', 'dash', 'tech-sheet', 'task-checklist', 'ai', 'risk'],
 };
 
 const ROLE_SUMMARIES = {
   'Chef de projet': [
     {
       title: 'Pilotage planning',
-      body: 'Suivez les initiatives, le Gantt et les simulations de delai pour ajuster le portefeuille.',
+      body: 'Suivez les projets, la simulation, le Gantt et les predictions de retard pour ajuster le portefeuille.',
       stat: '12 jalons',
       tone: 'var(--g)',
     },
     {
       title: 'Priorites a traiter',
-      body: 'Concentrez-vous sur les projets en risque et les arbitrages de ressources a faire cette semaine.',
-      stat: '3 alertes',
+      body: 'Cette vue inclut aussi le comite, les news, la matrice des risques et les analyses IA.',
+      stat: '9 acces',
       tone: 'var(--gold)',
     },
   ],
   DG: [
     {
       title: 'Vue executive',
-      body: 'Accedez uniquement aux syntheses portefeuille, aux predictions et aux points de comite.',
-      stat: '5 KPI',
+      body: 'Accedez aux dashboards, initiatives, comite, news, matrice des risques et IA.',
+      stat: '6 acces',
       tone: 'var(--g)',
     },
     {
       title: 'Decisions requises',
-      body: 'Les sections visibles mettent en avant les alertes majeures et les sujets de gouvernance.',
+      body: 'Les sections visibles mettent en avant la gouvernance, les alertes majeures et les arbitrages.',
       stat: '2 arbitrages',
       tone: 'var(--red)',
     },
@@ -46,31 +46,73 @@ const ROLE_SUMMARIES = {
   Manager: [
     {
       title: 'Coordination equipe',
-      body: 'Gardez un oeil sur le pipeline, les risques et les tendances pour guider les equipes.',
-      stat: '7 chantiers',
+      body: 'Gardez un oeil sur les projets, le Gantt, la simulation, le comite et les risques.',
+      stat: '8 acces',
       tone: 'var(--cyan)',
     },
     {
       title: 'Suivi transversal',
-      body: "Les sections visibles couvrent l'avancement, les previsions et l'assistant d'analyse.",
-      stat: '4 vues',
+      body: "Les sections visibles couvrent l'avancement, les news et l'assistant d'analyse IA.",
+      stat: 'Vue manager',
       tone: 'var(--g)',
     },
   ],
   Technicien: [
     {
       title: 'Execution terrain',
-      body: 'Recentrez-vous sur le planning terrain, les risques operationnels et les analyses RCA.',
-      stat: '9 actions',
+      body: 'Recentrez-vous sur la fiche technique, les checklists terrain, les news et les risques.',
+      stat: '6 acces',
       tone: 'var(--g)',
     },
     {
       title: 'Maintenance critique',
-      body: 'Les sections affichees privilegient le diagnostic, les causes racines et les interventions.',
-      stat: '2 RCA',
+      body: 'Les sections affichees privilegient les controles, les taches journalieres et les analyses IA.',
+      stat: '14 controles',
       tone: 'var(--gold)',
     },
   ],
+};
+
+const ROLE_LABELS = {
+  'Chef de projet': {
+    init: 'Projets',
+    risk: 'Matrice des Risques',
+    pred: 'Predictions',
+    exec: 'Comite',
+    ai: 'IA',
+  },
+  DG: {
+    init: 'Initiatives',
+    risk: 'Matrice des Risques',
+    exec: 'Comite',
+    ai: 'IA',
+  },
+  Manager: {
+    init: 'Projets',
+    risk: 'Matrice des Risques',
+    exec: 'Comite',
+    ai: 'IA',
+  },
+  Technicien: {
+    risk: 'Matrice des Risques',
+    ai: 'IA',
+    'tech-sheet': 'Fiche technique',
+    'task-checklist': 'Taches et checklist',
+  },
+};
+
+const DEFAULT_PAGE_LABELS = {
+  dash: 'Dashboards',
+  init: 'Initiatives',
+  gantt: 'Gantt',
+  sim: 'Simulation',
+  risk: 'Matrice des Risques',
+  ai: 'IA',
+  pred: 'Predictions',
+  news: 'News',
+  exec: 'Comite',
+  'tech-sheet': 'Fiche technique',
+  'task-checklist': 'Taches et checklist',
 };
 
 function getInitials(name) {
@@ -160,6 +202,132 @@ function applyRoleAccess(root, user) {
   if (topbarDate) {
     topbarDate.textContent = `${user.role} - ${user.email}`;
   }
+}
+
+function buildPlaceholderPage(pageId, title, subtitle, sections) {
+  const page = document.createElement('div');
+  page.className = 'page';
+  page.id = `page-${pageId}`;
+  page.innerHTML = `
+    <div class="page-header">
+      <div>
+        <div class="page-title">${title}</div>
+        <div class="page-sub">${subtitle}</div>
+      </div>
+    </div>
+    <div class="g2">
+      ${sections
+        .map(
+          (section) => `
+            <section class="card">
+              <div class="ch"><span class="ct">${section.title}</span></div>
+              <div class="cb">${section.content}</div>
+            </section>
+          `,
+        )
+        .join('')}
+    </div>
+  `;
+
+  return page;
+}
+
+function ensureRoleSpecificPages(root) {
+  if (!root) return;
+
+  const main = root.querySelector('.main');
+  const footer = root.querySelector('.footer');
+  const navBottom = root.querySelector('.nav-bottom');
+  if (!main || !footer || !navBottom) return;
+
+  if (!root.querySelector('#page-tech-sheet')) {
+    const techSheetPage = buildPlaceholderPage(
+      'tech-sheet',
+      'Fiche technique',
+      'Vue terrain · Equipements critiques · Demo locale',
+      [
+        {
+          title: 'Equipement prioritaire',
+          content:
+            "<div style=\"display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--t2)\"><div><strong style=\"color:var(--t1)\">Broyeur B-204</strong><br>Etat: surveillance renforcee du palier principal.</div><div>Derniere intervention: 08/06/2026 · Graissage complet et controle vibration.</div><div>Consigne: verifier pression, temperature et niveau lubrifiant a chaque prise de poste.</div></div>",
+        },
+        {
+          title: 'Parametres de controle',
+          content:
+            "<div class=\"sim-result-grid\"><div class=\"sim-metric\"><div class=\"sm-lbl\">Temperature max</div><div class=\"sm-val\">78 C</div></div><div class=\"sim-metric\"><div class=\"sm-lbl\">Vibration cible</div><div class=\"sm-val\">2.4 mm/s</div></div><div class=\"sim-metric\"><div class=\"sm-lbl\">Niveau lubrifiant</div><div class=\"sm-val\">85%</div></div><div class=\"sim-metric\"><div class=\"sm-lbl\">Pieces critiques</div><div class=\"sm-val\">12</div></div></div>",
+        },
+      ],
+    );
+
+    main.insertBefore(techSheetPage, footer);
+  }
+
+  if (!root.querySelector('#page-task-checklist')) {
+    const checklistPage = buildPlaceholderPage(
+      'task-checklist',
+      'Taches et checklist',
+      'Execution terrain · Verification avant demarrage · Demo locale',
+      [
+        {
+          title: 'Checklist de poste',
+          content:
+            "<div style=\"display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--t2)\"><label class=\"auth-check\"><input type=\"checkbox\"><span>Verifier la pression hydraulique</span></label><label class=\"auth-check\"><input type=\"checkbox\"><span>Confirmer le niveau lubrifiant</span></label><label class=\"auth-check\"><input type=\"checkbox\"><span>Signer la ronde securite</span></label><label class=\"auth-check\"><input type=\"checkbox\"><span>Reporter toute alerte critique au manager</span></label></div>",
+        },
+        {
+          title: 'Taches du jour',
+          content:
+            "<div style=\"display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--t2)\"><div class=\"why-row\"><div class=\"why-num\">1</div><div class=\"why-content\"><div class=\"why-a\">Inspection convoyeur zone nord</div></div></div><div class=\"why-row\"><div class=\"why-num\">2</div><div class=\"why-content\"><div class=\"why-a\">Remonter les photos d'usure dans le rapport journalier</div></div></div><div class=\"why-row\"><div class=\"why-num\">3</div><div class=\"why-content\"><div class=\"why-a\">Confirmer la disponibilite des pieces de rechange critiques</div></div></div></div>",
+        },
+      ],
+    );
+
+    main.insertBefore(checklistPage, footer);
+  }
+
+  if (!root.querySelector('[data-page-id="tech-sheet"]')) {
+    const techSheetNav = document.createElement('div');
+    techSheetNav.className = 'nav-btn';
+    techSheetNav.setAttribute('data-page-id', 'tech-sheet');
+    techSheetNav.setAttribute('onclick', "showPage('tech-sheet',this)");
+    techSheetNav.innerHTML = `
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M7 3h10l4 4v14H7z"/><path d="M17 3v5h4"/><path d="M10 12h8"/><path d="M10 16h8"/></svg>
+      <span class="nav-tip">Fiche technique</span>
+    `;
+    navBottom.parentNode.insertBefore(techSheetNav, navBottom);
+  }
+
+  if (!root.querySelector('[data-page-id="task-checklist"]')) {
+    const checklistNav = document.createElement('div');
+    checklistNav.className = 'nav-btn';
+    checklistNav.setAttribute('data-page-id', 'task-checklist');
+    checklistNav.setAttribute('onclick', "showPage('task-checklist',this)");
+    checklistNav.innerHTML = `
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <span class="nav-tip">Taches et checklist</span>
+    `;
+    navBottom.parentNode.insertBefore(checklistNav, navBottom);
+  }
+}
+
+function applyRoleLabels(root, user) {
+  if (!root || !user) return;
+
+  const labels = ROLE_LABELS[user.role] || {};
+  const navButtons = Array.from(root.querySelectorAll('.sidebar .nav-btn'));
+
+  navButtons.forEach((button) => {
+    const onclickValue = button.getAttribute('onclick') || '';
+    const match = onclickValue.match(/showPage\('([^']+)'/);
+    if (!match) return;
+
+    const pageId = match[1];
+    const navTip = button.querySelector('.nav-tip');
+    const label = labels[pageId] || DEFAULT_PAGE_LABELS[pageId];
+
+    if (navTip && label) {
+      navTip.textContent = label;
+    }
+  });
 }
 
 function injectRoleSummary(root, user, onSignOut) {
@@ -347,6 +515,8 @@ export default function MinXView() {
     scriptRef.current = script;
 
     const syncUi = () => {
+      ensureRoleSpecificPages(appRef.current);
+      applyRoleLabels(appRef.current, user);
       applyRoleAccess(appRef.current, user);
       injectRoleSummary(appRef.current, user, handleSignOut);
     };
